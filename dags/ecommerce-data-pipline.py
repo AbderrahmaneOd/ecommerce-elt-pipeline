@@ -55,7 +55,7 @@ with DAG(
     
     # Load 
     load_data = SparkSubmitOperator(
-        task_id='run_spark_job',
+        task_id='load_spark_job',
         application='/shared/scripts/load.py',
         conn_id='spark_default',
         verbose=True,
@@ -66,7 +66,7 @@ with DAG(
     
     # Transform
     transform_data = SparkSubmitOperator(
-        task_id='run_spark_job',
+        task_id='transform_spark_job',
         application='/shared/scripts/transform.py',
         conn_id='spark_default',
         verbose=True,
