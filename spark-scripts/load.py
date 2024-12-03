@@ -3,7 +3,7 @@ from pyspark.sql.functions import col, to_timestamp, sum, round, expr
 
 # Create a SparkSession
 spark = SparkSession.builder \
-    .appName("E-Commerce Data Transformation") \
+    .appName("E-Commerce Data Loading") \
     .config("spark.sql.catalogImplementation", "hive") \
     .config("hive.metastore.uris", "thrift://hive-metastore:9083") \
     .config("spark.sql.warehouse.dir", "hdfs://namenode:9000/user/hive/warehouse") \
@@ -17,8 +17,7 @@ spark.sql("CREATE DATABASE IF NOT EXISTS ecommerce_db")
 # Step 2: Switch to the newly created (or existing) database
 spark.sql("USE ecommerce_db")
 
-# Step 3: Create the `ecommerce_data` table with appropriate schema
-# The table will store data in TEXTFILE format and skip the header line.
+# Step 3: Create the `ecommerce_raw` table with appropriate schema
 spark.sql("""
     CREATE TABLE IF NOT EXISTS ecommerce_raw (
         InvoiceNo STRING,
@@ -36,8 +35,7 @@ spark.sql("""
     TBLPROPERTIES ("skip.header.line.count"="1")  # Skip the header line during data load
 """)
 
-# Step 4: Load data from HDFS into the `ecommerce_data` table
-# Ensure that the file path '/input/ecommerce_data/data.csv' exists in HDFS.
+# Step 4: Load data from HDFS into the `ecommerce_raw` table
 spark.sql("LOAD DATA INPATH '/input/ecommerce_data/data.csv' INTO TABLE ecommerce_raw")
 
 # Stop the Spark session
