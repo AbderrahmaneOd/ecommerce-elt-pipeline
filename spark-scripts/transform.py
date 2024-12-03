@@ -71,6 +71,12 @@ product_performance_df = transformed_df.groupBy("StockCode", "Description").agg(
 ).orderBy(col("TotalRevenue").desc())
 
 
+# Write transformed data back to Hive in Parquet format
+transformed_df.write \
+    .mode("overwrite") \
+    .format("parquet") \
+    .saveAsTable("ecommerce_transformed")
+
 # Write results back to Hive in Parquet format with partitioning
 sales_per_country_df.write \
     .mode("overwrite") \

@@ -30,7 +30,7 @@ def get_hive_data(query):
 # Load the data from Hive table
 @st.cache_data
 def load_table_data():
-    query = "SELECT * FROM ecommerce_data"
+    query = "SELECT * FROM ecommerce_transformed"
     data = get_hive_data(query)
     data.columns = [col.split('.')[-1] for col in data.columns]  # Simplify column names
     data['invoicedate'] = pd.to_datetime(data['invoicedate'], errors='coerce')  # Convert dates

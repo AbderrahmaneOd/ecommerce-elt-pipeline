@@ -160,6 +160,8 @@ services:
     ports:
     - "8501:8501"
     command: bash -c "streamlit run app.py"
+    volumes:
+     - streamlit:/app
 
 volumes:
   hadoop_namenode:
