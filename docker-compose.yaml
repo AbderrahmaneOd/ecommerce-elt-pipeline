@@ -154,6 +154,13 @@ services:
     depends_on:
     - external_postgres_db
 
+  streamlit:
+    image: abdeod/streamlit:pyhive
+    container_name: streamlit
+    ports:
+    - "8501:8501"
+    command: bash -c "streamlit run app.py"
+
 volumes:
   hadoop_namenode:
   hadoop_namenode_conda:

@@ -9,7 +9,7 @@ RUN pip install streamlit pyhive pandas plotly thrift thrift-sasl
 COPY ../data/data.csv /app/
 
 # Copy the Streamlit app into the container
-COPY app*.py /app/
+COPY streamlit/app*.py /app/
 
 EXPOSE 8501
 
