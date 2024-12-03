@@ -1,7 +1,9 @@
 # E-Commerce ELT Pipeline
 
 ## 📄 Description
-This project implements an ELT (Extract, Load, Transform) data pipeline for processing and analyzing e-commerce transaction data from a UK-based online retailer. Using a modern tech stack, the pipeline enables efficient data ingestion, transformation, and visualization to generate actionable business insights. The entire stack is containerized using Docker for ease of deployment.
+This project implements an ELT (Extract, Load, Transform) data pipeline for analyzing e-commerce transaction data from a UK-based online retailer. It uses a modern, containerized tech stack to enable efficient data ingestion, transformation, warehousing, and visualization. The pipeline facilitates actionable business insights through streamlined processes.
+
+---
 
 ## 🚀 Features
 - **Data Extraction**: Ingest raw e-commerce transaction data from CSV files.
@@ -11,17 +13,36 @@ This project implements an ELT (Extract, Load, Transform) data pipeline for proc
 - **Scalability**: Leverage Hadoop for distributed data storage and processing.
 - **Containerized Deployment**: Use Docker to run the entire stack seamlessly.
 
+---
+
 ## 🛠️ Tech Stack
-- **Apache Spark**: For distributed data processing and transformation.
-- **Apache Hive**: As the data warehousing solution.
-- **Apache Airflow**: For workflow orchestration and scheduling.
-- **Hadoop**: For distributed storage (HDFS).
-- **Docker**: For containerization of the pipeline.
+
+| Technology | Purpose | Version |
+|--- |--- | --- |
+| Hadoop | Distributed storage (HDFS) | 3.2.1 |
+| Python | Programming and scripting  | 3.9 |
+| Spark | Distributed data processing | 3.2.2
+| Airflow | Workflow orchestration | 2.3.3 |
+| Zeppelin | Web-based notebook for exploration | 0.10.1 |
+| Hive | Data warehousing solution | 2.3.2 |
+| Postgres | Hive metastore backend | 15.1 |
+
+---
 
 ## 📂 Project Structure
 
+```
+.
+├── dags/                        # Airflow DAGs for pipeline orchestration
+├── configs/                     # Configuration files for Spark, Hive, and Hadoop
+├── spark-scripts/               # Scripts for data ingestion and transformation
+├── data/                        # Folder to store raw data
+├── streamlit/                   # Streamlit app for data visualization
+└── docker-compose.yml           # Docker Compose file to orchestrate services
 
+```
 
+---
 
 ## ⚙️ Setup and Usage
 
@@ -36,18 +57,36 @@ This project implements an ELT (Extract, Load, Transform) data pipeline for proc
    cd spark-hive-airflow-ecommerce-pipeline
    ```
 
-2. **Clone the Repository**
+2. **Launch Services**
    ```bash
    docker compose up -d
    ```
 
 
 3. **Access Services**
+  
+| Service             | URL                        |
+|---------------------|----------------------------|
+| HDFS Namenode       | http://localhost:9870      |
+| YARN ResourceManager| http://localhost:8088      |
+| Spark Master        | http://localhost:8080      |
+| Spark Worker        | http://localhost:8081      |
+| Zeppelin            | http://localhost:8082      |
+| Airflow             | http://localhost:3000      |
+
+##### Airflow creds
+ - username  : admin
+ - password  : admin
+ - firstname : admin
+ - lastname  : admin
+ - role      : Admin
+ - email     : admin@gmail.com
 
 4. **Run the Pipeline**
 
-5. **Run the Pipeline**
+You can monitor progress in the Airflow UI.
 
-## 🧪 Example Queries
+---
 
-
+## 📈 Data Visualization
+The project includes a Streamlit app for intuitive visualization of business metrics, such as total revenue, top-selling products, and customer trends.
