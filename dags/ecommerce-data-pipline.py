@@ -54,7 +54,7 @@ with DAG(
     
     
     # Load 
-    extract_data = SparkSubmitOperator(
+    load_data = SparkSubmitOperator(
         task_id='run_spark_job',
         application='/shared/scripts/load.py',
         conn_id='spark_default',
@@ -75,4 +75,4 @@ with DAG(
     )
     
     # Define task dependencies
-    wait_for_data_file >> upload_data_to_hdfs >> extract_data
+    wait_for_data_file >> upload_data_to_hdfs >> load_data >> transform_data
