@@ -30,9 +30,9 @@ spark.sql("""
         Country STRING
     )
     ROW FORMAT DELIMITED
-    FIELDS TERMINATED BY ','  # Columns are separated by commas
-    STORED AS TEXTFILE  # Data is stored as a text file
-    TBLPROPERTIES ("skip.header.line.count"="1")  # Skip the header line during data load
+    FIELDS TERMINATED BY ','
+    STORED AS TEXTFILE
+    TBLPROPERTIES ("skip.header.line.count"="1")
 """)
 
 # Step 4: Load data from HDFS into the `ecommerce_raw` table
