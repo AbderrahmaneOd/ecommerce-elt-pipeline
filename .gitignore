@@ -1,4 +1,3 @@
-dags/*
 docker-hadoop-hive-parquet
 docker-hadoop-spark
 hadoop_tutorial_udemy
