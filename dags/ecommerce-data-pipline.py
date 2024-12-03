@@ -28,7 +28,7 @@ HDFS_DATA_PATH = '/input/ecommerce_data/'
 with DAG(
     'ecommerce_data_pipeline',
     default_args=default_args,
-    schedule_interval='@daily',
+    schedule_interval=None,
     catchup=False
 ) as dag:
     
@@ -56,7 +56,7 @@ with DAG(
     # Load 
     load_data = SparkSubmitOperator(
         task_id='load_spark_job',
-        application='/shared/scripts/load.py',
+        application='/home/scripts/load.py',
         conn_id='spark_default',
         verbose=True,
         application_args=[],
@@ -67,7 +67,7 @@ with DAG(
     # Transform
     transform_data = SparkSubmitOperator(
         task_id='transform_spark_job',
-        application='/shared/scripts/transform.py',
+        application='/home/scripts/transform.py',
         conn_id='spark_default',
         verbose=True,
         application_args=[],
