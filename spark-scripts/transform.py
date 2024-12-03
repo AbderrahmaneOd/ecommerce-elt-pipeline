@@ -20,7 +20,7 @@ spark.sql("USE ecommerce_db")
 spark.sql("SHOW TABLES").show()
 
 # Load the data from the Hive table
-raw_df = spark.sql("SELECT * FROM ecommerce_data")
+raw_df = spark.sql("SELECT * FROM ecommerce_raw")
 
 # Transformations
 # # 1. Convert InvoiceDate to Timestamp
