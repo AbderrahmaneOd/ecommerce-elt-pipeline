@@ -3,10 +3,10 @@ FROM python:3.9-slim
 # Set the working directory
 WORKDIR /app
 
-COPY streamlit/app.py /app/app.py
-
 # Install dependencies
 RUN pip install --no-cache-dir streamlit pyhive pandas plotly thrift thrift-sasl
+
+COPY streamlit/app.py /app/app.py
 
 # Expose the default Streamlit port
 EXPOSE 8501
