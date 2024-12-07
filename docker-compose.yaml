@@ -131,30 +131,6 @@ services:
     image: bde2020/hive-metastore-postgresql:2.3.0
     container_name: hive-metastore-postgresql
 
-  # Setup external DB & pagadmin
-  external_postgres_db:
-    image: postgres:15.1-alpine3.17
-    container_name: external_postgres_db
-    volumes:
-    - external_postgres_db_data:/var/lib/postgresl/data/
-    ports:
-    - "5432:5432"
-    environment:
-      POSTGRES_USER: external
-      POSTGRES_PASSWORD: external
-      POSTGRES_DB: external
-
-  external_pgadmin:
-    image: dpage/pgadmin4:6.18
-    container_name: external_pgadmin
-    ports:
-    - "5000:80"
-    environment:
-    - "PGADMIN_DEFAULT_EMAIL=pgadmin@xyz.com"
-    - "PGADMIN_DEFAULT_PASSWORD=external"
-    depends_on:
-    - external_postgres_db
-
   streamlit:
     image: abdeod/streamlit:pyhive
     container_name: streamlit
@@ -177,5 +153,4 @@ volumes:
   hadoop_nodemanager_conda:
   hadoop_historyserver:
   hadoop_hive_server_sqoop:
-  external_postgres_db_data:
   airflow_namenode:
