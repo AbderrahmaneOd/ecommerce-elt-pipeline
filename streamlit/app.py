@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
 import plotly.express as px
-
+from pyhive import hive
 
 # Set the page configuration
 st.set_page_config(
@@ -11,17 +11,35 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
+# Configure the Hive connection
+hive_host = "hive-server"
+hive_port = 10000
+hive_database = "ecommerce_db"
 
+# Establish Hive connection
+@st.cache_resource
+def get_hive_connection():
+    return hive.Connection(host=hive_host, port=hive_port, database=hive_database)
+
+# Query Hive to get data
 @st.cache_data
-def load_data():
-    # Load the CSV with low_memory=False to suppress mixed types warning
-    data = pd.read_csv('/app/data.csv', encoding='ISO-8859-1', low_memory=False)
-    # Convert 'InvoiceDate' to datetime and handle errors gracefully
-    data['InvoiceDate'] = pd.to_datetime(data['InvoiceDate'], errors='coerce')
+def get_hive_data(query):
+    conn = get_hive_connection()
+    return pd.read_sql(query, conn)
+
+# Load the data from Hive table
+@st.cache_data
+def load_table_data():
+    query = "SELECT * FROM ecommerce_transformed"
+    data = get_hive_data(query)
+    data.columns = [col.split('.')[-1] for col in data.columns]  # Simplify column names
+    data['invoicedate'] = pd.to_datetime(data['invoicedate'], errors='coerce')  # Convert dates
     return data
 
+
 # Load data
-data = load_data()
+data = load_table_data()
+
 
 
 # Custom CSS for modern design
@@ -67,11 +85,11 @@ with kpi1:
     st.metric(label="🛒 Total Transactions", value=data.shape[0], delta=None)
 
 with kpi2:
-    total_quantity = data["Quantity"].sum()
+    total_quantity = data["quantity"].sum()
     st.metric(label="📦 Total Quantity Sold", value=f"{total_quantity:,}")
 
 with kpi3:
-    total_revenue = (data["Quantity"] * data["UnitPrice"]).sum()
+    total_revenue = (data["quantity"] * data["unitprice"]).sum()
     st.metric(label="💰 Total Revenue (€)", value=f"€{total_revenue:,.2f}")
 
 # Sidebar for Filters
@@ -80,11 +98,11 @@ st.sidebar.markdown("Apply filters to customize the data view.")
 
 country_filter = st.sidebar.multiselect(
     "🌍 Select Countries:",
-    options=data['Country'].dropna().unique(),
+    options=data['country'].dropna().unique(),
     default=None
 )
 
-min_date, max_date = data['InvoiceDate'].min(), data['InvoiceDate'].max()
+min_date, max_date = data['invoicedate'].min(), data['invoicedate'].max()
 date_filter = st.sidebar.date_input(
     "📅 Date Range:",
     [min_date, max_date],
@@ -94,9 +112,9 @@ date_filter = st.sidebar.date_input(
 
 # Filter Data
 filtered_data = data[
-    (data['Country'].isin(country_filter)) &
-    (data['InvoiceDate'] >= pd.Timestamp(date_filter[0])) &
-    (data['InvoiceDate'] <= pd.Timestamp(date_filter[1]))
+    (data['country'].isin(country_filter)) &
+    (data['invoicedate'] >= pd.Timestamp(date_filter[0])) &
+    (data['invoicedate'] <= pd.Timestamp(date_filter[1]))
 ]
 
 # Filtered Data Preview
@@ -119,12 +137,12 @@ chart1, chart2 = st.columns(2)
 with chart1:
     st.subheader("🌍 Sales by Country")
     sales_by_country = (
-        filtered_data.groupby("Country")["Quantity"].sum().reset_index().sort_values("Quantity", ascending=False)
+        filtered_data.groupby("country")["quantity"].sum().reset_index().sort_values("quantity", ascending=False)
     )
     fig = px.bar(
         sales_by_country,
-        x="Country",
-        y="Quantity",
+        x="country",
+        y="quantity",
         title="Quantity Sold by Country",
         color="Quantity",
         color_continuous_scale=px.colors.sequential.Blues,
@@ -135,12 +153,12 @@ with chart1:
 with chart2:
     st.subheader("📦 Top Selling Products")
     top_products = (
-        filtered_data.groupby("Description")["Quantity"].sum().reset_index().sort_values("Quantity", ascending=False).head(10)
+        filtered_data.groupby("description")["quantity"].sum().reset_index().sort_values("quantity", ascending=False).head(10)
     )
     fig = px.bar(
         top_products,
-        x="Quantity",
-        y="Description",
+        x="quantity",
+        y="description",
         orientation='h',
         title="Top Selling Products",
         color="Quantity",
@@ -151,12 +169,12 @@ with chart2:
 # Sales Trend Over Time
 st.subheader("📈 Sales Trend Over Time")
 sales_over_time = (
-    filtered_data.groupby(filtered_data['InvoiceDate'].dt.date)["Quantity"].sum().reset_index()
+    filtered_data.groupby(filtered_data['invoicedate'].dt.date)["quantity"].sum().reset_index()
 )
 fig = px.line(
     sales_over_time,
-    x="InvoiceDate",
-    y="Quantity",
+    x="invoicedate",
+    y="quantity",
     title="Sales Trend",
     markers=True,
     color_discrete_sequence=["#2A9D8F"],
@@ -165,7 +183,7 @@ st.plotly_chart(fig, use_container_width=True)
 
 # Correlation Matrix
 st.subheader("📊 Correlation Analysis")
-correlation = filtered_data[['Quantity', 'UnitPrice']].corr()
+correlation = filtered_data[['quantity', 'unitprice']].corr()
 fig = px.imshow(
     correlation,
     text_auto=True,
