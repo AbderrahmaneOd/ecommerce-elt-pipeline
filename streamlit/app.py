@@ -40,8 +40,6 @@ def load_table_data():
 # Load data
 data = load_table_data()
 
-
-
 # Custom CSS for modern design
 st.markdown("""
     <style>
@@ -54,11 +52,11 @@ st.markdown("""
         section[data-testid="stSidebar"] {
             color: black;
         }
-        section[data-testid="stSidebar"] h1, 
-        section[data-testid="stSidebar"] h2, 
-        section[data-testid="stSidebar"] h3, 
-        section[data-testid="stSidebar"] h4, 
-        section[data-testid="stSidebar"] h5, 
+        section[data-testid="stSidebar"] h1,
+        section[data-testid="stSidebar"] h2,
+        section[data-testid="stSidebar"] h3,
+        section[data-testid="stSidebar"] h4,
+        section[data-testid="stSidebar"] h5,
         section[data-testid="stSidebar"] h6 {
             color: #000000;
         }
@@ -70,7 +68,7 @@ st.markdown("""
         .stMarkdown {
             margin-bottom: 15px;
         }
-        
+
     </style>
 """, unsafe_allow_html=True)
 
@@ -131,63 +129,64 @@ st.download_button(
 
 # Visualizations
 st.markdown("### Visual Analytics")
-chart1, chart2 = st.columns(2)
 
 # Sales by Country
-with chart1:
-    st.subheader("🌍 Sales by Country")
-    sales_by_country = (
-        filtered_data.groupby("country")["quantity"].sum().reset_index().sort_values("quantity", ascending=False)
-    )
-    fig = px.bar(
-        sales_by_country,
-        x="country",
-        y="quantity",
-        title="Quantity Sold by Country",
-        color="quantity",
-        color_continuous_scale=px.colors.sequential.Blues,
-    )
-    st.plotly_chart(fig, use_container_width=True)
+st.subheader("🌍 Sales by Country")
+sales_by_country = (
+    filtered_data.groupby("country")["totalamount"].sum().reset_index().sort_values("totalamount", ascending=False)
+)
+fig = px.bar(
+    sales_by_country,
+    x="country",
+    y="totalamount",
+    title="Total Revenue by Country",
+    color="totalamount",
+    color_continuous_scale=px.colors.sequential.Blues,
+)
+st.plotly_chart(fig, use_container_width=True)
 
 # Top Selling Products
-with chart2:
-    st.subheader("📦 Top Selling Products")
-    top_products = (
-        filtered_data.groupby("description")["quantity"].sum().reset_index().sort_values("quantity", ascending=False).head(10)
-    )
-    fig = px.bar(
-        top_products,
-        x="quantity",
-        y="description",
-        orientation='h',
-        title="Top Selling Products",
-        color="quantity",
-        color_continuous_scale=px.colors.sequential.Purples,
-    )
-    st.plotly_chart(fig, use_container_width=True)
+st.subheader("📦 Top Selling Products")
+top_products = (
+    filtered_data.groupby("description")["quantity"].sum().reset_index().sort_values("quantity", ascending=False).head(10)
+)
+fig = px.bar(
+    top_products,
+    x="quantity",
+    y="description",
+    orientation='h',
+    title="Top Selling Products",
+    color="quantity",
+    color_continuous_scale=px.colors.sequential.Purples,
+)
+st.plotly_chart(fig, use_container_width=True)
 
 # Sales Trend Over Time
 st.subheader("📈 Sales Trend Over Time")
 sales_over_time = (
-    filtered_data.groupby(filtered_data['invoicedate'].dt.date)["quantity"].sum().reset_index()
+    filtered_data.groupby(filtered_data['invoicedate'].dt.date)["totalamount"].sum().reset_index()
 )
 fig = px.line(
     sales_over_time,
     x="invoicedate",
-    y="quantity",
-    title="Sales Trend",
+    y="totalamount",
+    title="Sales Trend by Revenue",
     markers=True,
     color_discrete_sequence=["#2A9D8F"],
 )
 st.plotly_chart(fig, use_container_width=True)
 
-# Correlation Matrix
-st.subheader("📊 Correlation Analysis")
-correlation = filtered_data[['quantity', 'unitprice']].corr()
-fig = px.imshow(
-    correlation,
-    text_auto=True,
+# Sales by Year
+st.subheader("📅 Sales by Year")
+sales_by_year = (
+    filtered_data.groupby("year")["totalamount"].sum().reset_index().sort_values("year")
+)
+fig = px.bar(
+    sales_by_year,
+    x="year",
+    y="totalamount",
+    title="Total Revenue by Year",
+    color="totalamount",
     color_continuous_scale=px.colors.sequential.Viridis,
-    title="Correlation Matrix",
 )
 st.plotly_chart(fig, use_container_width=True)
