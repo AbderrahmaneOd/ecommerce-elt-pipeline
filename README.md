@@ -14,6 +14,11 @@ This project implements an ELT (Extract, Load, Transform) data pipeline for anal
 - **Containerized Deployment**: Use Docker to run the entire stack seamlessly.
 
 ---
+## 📝 Project Architecture
+![Airflow Pipeline Graph](/output/ELT-Pipeline-Workflow.png)
+*ELT pipeline workflow*
+
+---
 
 ## 🛠️ Tech Stack
 
