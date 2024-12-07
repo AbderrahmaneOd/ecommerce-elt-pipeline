@@ -1,4 +1,4 @@
-# E-Commerce ELT Pipeline
+# 🛒 E-Commerce Data Pipeline
 
 ## 📄 Description
 This project implements an ELT (Extract, Load, Transform) data pipeline for analyzing e-commerce transaction data from a UK-based online retailer. It uses a modern, containerized tech stack to enable efficient data ingestion, transformation, warehousing, and visualization. The pipeline facilitates actionable business insights through streamlined processes.
@@ -37,6 +37,7 @@ This project implements an ELT (Extract, Load, Transform) data pipeline for anal
 ├── configs/                     # Configuration files for Spark, Hive, and Hadoop
 ├── spark-scripts/               # Scripts for data ingestion and transformation
 ├── data/                        # Folder to store raw data
+├── output/                      # Folder for results
 ├── streamlit/                   # Streamlit app for data visualization
 └── docker-compose.yml           # Docker Compose file to orchestrate services
 
@@ -44,49 +45,89 @@ This project implements an ELT (Extract, Load, Transform) data pipeline for anal
 
 ---
 
-## ⚙️ Setup and Usage
+## 🚀 Quick Start Guide
 
 ### Prerequisites
-- Docker and Docker Compose installed
-- Basic understanding of ELT pipelines and the tech stack
 
-### Steps
+- Docker
+- Docker Compose
+- Minimum 16GB RAM recommended
+- Git
+
+### Installation Steps
+
 1. **Clone the Repository**
    ```bash
    git clone https://github.com/AbderrahmaneOd/spark-hive-airflow-ecommerce-pipeline.git
    cd spark-hive-airflow-ecommerce-pipeline
    ```
 
-2. **Launch Services**
+2. **Launch Infrastructure**
    ```bash
-   docker compose up -d
+   docker-compose up -d
    ```
 
-
 3. **Access Services**
-  
-| Service             | URL                        |
-|---------------------|----------------------------|
-| HDFS Namenode       | http://localhost:9870      |
-| YARN ResourceManager| http://localhost:8088      |
-| Spark Master        | http://localhost:8080      |
-| Spark Worker        | http://localhost:8081      |
-| Zeppelin            | http://localhost:8082      |
-| Airflow             | http://localhost:3000      |
 
-##### Airflow creds
- - username  : admin
- - password  : admin
- - firstname : admin
- - lastname  : admin
- - role      : Admin
- - email     : admin@gmail.com
+   | Service | URL | Credentials |
+   |---------|-----|-------------|
+   | HDFS Namenode | http://localhost:9870 | - |
+   | YARN ResourceManager | http://localhost:8088 | - |
+   | Spark Master | http://localhost:8080 | - |
+   | Spark Worker | http://localhost:8081 | - |
+   | Zeppelin | http://localhost:8082 | - |
+   | Airflow | http://localhost:3000 | admin@gmail.com / admin |
 
-4. **Run the Pipeline**
-
-You can monitor progress in the Airflow UI.
+4. **Configure Spark Connection**
+   - Navigate to Airflow UI
+   - Go to Admin > Connections
+   - Edit "spark_default"
+     * Host: spark://namenode
+     * Port: 7077
 
 ---
 
-## 📈 Data Visualization
+## 🔍 Pipeline Workflow
+
+The Airflow DAG demonstrates a workflow:
+1. Wait for data file
+2. Upload data to HDFS
+3. Load data using Spark
+4. Transform data using Spark
+
+---
+   
+## 📊 Data Visualization
 The project includes a Streamlit app for intuitive visualization of business metrics, such as total revenue, top-selling products, and customer trends.
+
+The Streamlit dashboard offers comprehensive e-commerce analytics:
+
+- **Key Performance Metrics**:
+  - Total Transactions
+  - Total Quantity Sold
+  - Total Revenue
+
+- **Interactive Visualizations**:
+  - Sales by Country
+  - Top Selling Products
+  - Sales Trend Over Time
+  - Sales by Year
+
+- **Filtering Capabilities**:
+  - Country-based filtering
+  - Date range selection
+  - Downloadable filtered data
+ 
+## 🖼️ Project Outputs
+
+### Airflow Pipeline Visualization
+![Airflow Pipeline Graph](/output/ecommerce_data_pipeline-Airflow.png)
+*Airflow DAG (Directed Acyclic Graph) showing the pipeline workflow*
+
+### Airflow Task Dependencies
+![Airflow Task Dependencies](/output/ecommerce_data_pipeline-Graph-Airflow.png)
+*Detailed view of task dependencies in the data pipeline*
+
+### Streamlit E-Commerce Dashboard
+![Streamlit Dashboard](/output/E-Commerce-Dashboard-Streamlit.png)
+*Interactive dashboard for e-commerce sales analytics*
