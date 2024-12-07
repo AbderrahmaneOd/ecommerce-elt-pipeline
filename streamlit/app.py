@@ -144,7 +144,7 @@ with chart1:
         x="country",
         y="quantity",
         title="Quantity Sold by Country",
-        color="Quantity",
+        color="quantity",
         color_continuous_scale=px.colors.sequential.Blues,
     )
     st.plotly_chart(fig, use_container_width=True)
@@ -161,7 +161,7 @@ with chart2:
         y="description",
         orientation='h',
         title="Top Selling Products",
-        color="Quantity",
+        color="quantity",
         color_continuous_scale=px.colors.sequential.Purples,
     )
     st.plotly_chart(fig, use_container_width=True)
